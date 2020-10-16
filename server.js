@@ -33,16 +33,20 @@ app.get('/location', (request, response) => {
     response.send(location);
 });
 
-app.get('/restaurants', (request, response) => {
-    let data = require('./data/restaurants.json');
-    let restaurantArray = [];
-    data.nearby_restaurants.forEach(value => {
-        let restaurant = new Restaurant(value);
-        restaurantArray.push(restaurant);
-    })
-    console.log(restaurantArray);
-    response.send(restaurantArray);
-
+app.get('/weather', (request, response) => {
+    // bring weather.json data in
+    let data = require('./data/weather.json');
+    // create array to push forcast objects in to
+    let dayArray = [];
+    // loop through the array in weather.json to grab individual forcasts
+    data.data.forEach(dayObj => {
+        // create instances of weather with the info front end needs
+        let weather = new Weather(dayObj);
+        // push created objects in to dayArray to prepare to pass to client
+        dayArray.push(weather);
+    });
+    // send forcast objects to client
+    response.send(dayArray);
 });
 
 // Constructor to tailor our incoming raw data
@@ -54,14 +58,10 @@ function Location(obj, query) {
     this.formatted_query = obj[0].display_name
 }
 
-function Restaurant(obj) {
-    this.url = obj.restaurant.url;
-    this.name = obj.restaurant.name;
-    this.rating = obj.restaurant.user_rating.aggregate_rating;
-    this.cost = obj.price_range;
-    this.image_url = obj.restaurant.thumb;
+function Weather(obj) {
+    this.forecast = obj.weather.description;
+    this.time = obj.valid_date;
 }
-
 
 // Start our server!
 app.listen(PORT, () => {

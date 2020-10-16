@@ -22,42 +22,46 @@ app.get('/', (request, response) => {
 });
 
 app.get('/location', (request, response) => {
+    // find city name recieved from search
+    console.log(request);
     let city = request.query.city;
-    // getting the data from a database or API, using a flat file
-    let data = require('./data/location.json')[0];
+    // bring location.json data in
+    let data = require('./data/location.json');
+    // create object instance to pass to frontend
     let location = new Location(data, city);
+    // pass object to front end
     response.send(location);
 });
 
-app.get('/restaurants', (request, response) => {
-    let data = require('./data/restaurants.json');
-    let restaurantArray = [];
-    data.nearby_restaurants.forEach(value => {
-        let restaurant = new Restaurant(value);
-        restaurantArray.push(restaurant);
-    })
-    console.log(restaurantArray);
-    response.send(restaurantArray);
-
+app.get('/weather', (request, response) => {
+    // bring weather.json data in
+    let data = require('./data/weather.json');
+    // create array to push forcast objects in to
+    let dayArray = [];
+    // loop through the array in weather.json to grab individual forcasts
+    data.data.forEach(dayObj => {
+        // create instances of weather with the info front end needs
+        let weather = new Weather(dayObj);
+        // push created objects in to dayArray to prepare to pass to client
+        dayArray.push(weather);
+    });
+    // send forcast objects to client
+    response.send(dayArray);
 });
 
 // Constructor to tailor our incoming raw data
 
-function Location(obj, query){
-    this.lat = obj.lat;
-    this.lon = obj.lon;
-    this.search_query = query;
-    this.location = obj.display_name;
+function Location(obj, query) {
+    this.latitude = obj[0].lat,
+    this.longitude = obj[0].lon,
+    this.search_query = query,
+    this.formatted_query = obj[0].display_name
 }
 
-function Restaurant(obj) {
-    this.url = obj.restaurant.url;
-    this.name = obj.restaurant.name;
-    this.rating = obj.restaurant.user_rating.aggregate_rating;
-    this.cost = obj.price_range;
-    this.image_url = obj.restaurant.thumb;
+function Weather(obj) {
+    this.forecast = obj.weather.description;
+    this.time = obj.valid_date;
 }
-
 
 // Start our server!
 app.listen(PORT, () => {

@@ -22,10 +22,14 @@ app.get('/', (request, response) => {
 });
 
 app.get('/location', (request, response) => {
+    // find city name recieved from search
+    console.log(request);
     let city = request.query.city;
-    // getting the data from a database or API, using a flat file
-    let data = require('./data/location.json')[0];
+    // bring location.json data in
+    let data = require('./data/location.json');
+    // create object instance to pass to frontend
     let location = new Location(data, city);
+    // pass object to front end
     response.send(location);
 });
 
@@ -43,11 +47,11 @@ app.get('/restaurants', (request, response) => {
 
 // Constructor to tailor our incoming raw data
 
-function Location(obj, query){
-    this.lat = obj.lat;
-    this.lon = obj.lon;
-    this.search_query = query;
-    this.location = obj.display_name;
+function Location(obj, query) {
+    this.latitude = obj[0].lat,
+    this.longitude = obj[0].lon,
+    this.search_query = query,
+    this.formatted_query = obj[0].display_name
 }
 
 function Restaurant(obj) {

@@ -41,7 +41,7 @@ function location(request, response) {
     // log error
     catch (error) {
         console.log(error);
-        response.status(500).send('Opps... Something\'s wrong here.');
+        response.status(500).send('Oops... Something\'s wrong here.');
     }
 }
 

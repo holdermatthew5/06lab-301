@@ -30,7 +30,6 @@ app.get('/location', location);
 function location(request, response) {
     try {
         // find city name recieved from search
-        console.log(request);
         let city = request.query.city;
         // bring location.json data in
         let data = require('./data/location.json');

@@ -58,7 +58,7 @@ function weather(request, response) {
         // create array to push forcast objects in to
         let dayArray = [];
         // loop through the array in weather.json to grab individual forcasts
-        data.data.forEach(dayObj => {
+        data.data.map(dayObj => {
             // create instances of weather with the info front end needs
             let weather = new Weather(dayObj);
             // push created objects in to dayArray to prepare to pass to client

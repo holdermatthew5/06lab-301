@@ -1,11 +1,29 @@
 # City Explorer?
 
 **Author**: Matthew Holder
-**Version**: 1.0.2
+**Version**: 1.0.3
 
 # Overview
 
 This application will allow a user to search a city by name and by shown related information like coordinates, a map and weather
+
+Number and name of feature: Feature #1 - Location
+Estimate of time needed to complete: 1hr
+Start time: 8:02pm
+Finish time: 9:15pm
+Actual time needed to complete: 1hr 13min
+
+Number and name of feature: Feature #2 - Weather
+Estimate time needed to complete: 1hr 13min
+Start time: 9:16pm
+Finish time: 10:30pm
+Actual time needed to complete: 1hr 14min
+
+Number and name of feature: Feature #3 - Errors
+Estimate time needed to complete: 1hr 13min
+Start time: 10:31pm
+Finish time: 2:57pm
+Actual time needed to complete: 2hr 15min
 
 ## Getting Started
 

@@ -4,6 +4,7 @@
 // Bring in our dependencies
 const express = require('express');
 const cors = require('cors');
+const superagent = require('superagent');
 
 require('dotenv').config();
 
@@ -31,12 +32,20 @@ function location(request, response) {
     try {
         // find city name recieved from search
         let city = request.query.city;
-        // bring location.json data in
-        let data = require('./data/location.json');
-        // create object instance to pass to frontend
-        let location = new Location(data, city);
+        let key = process.env.GEOCODE_API_KEY;
+        let locArr = [];
+        // assign location api url
+        let url = `https://us1.locationiq.com/v1/search.php?key=${key}&q=${city}&format=json`;
+        // request data from provided url
+        // console.log('');
+        superagent.get(url).then(data => {
+            // create object instance to pass to frontend
+            let location = new Location(data.body[0], city);
+            locArr.push(location);
+        });
+        weather(request, response, lat, lon)
         // pass object to front end
-        response.send(location);
+        response.send(locArr);
     }
     // log error
     catch (error) {
@@ -47,18 +56,21 @@ function location(request, response) {
 
 // listen for request
 
-app.get('/weather', weather);
+// app.get('/weather', weather);
 
 // handle request
 
 function weather(request, response) {
     try {
-        // bring weather.json data in
-        let data = require('./data/weather.json');
+        // define city
+        let city = request.query.city;
+        console.log(city)
+        // define api url
+        let url = `https://api.weatherbit.io/v2.0/current?city=${city}&key=${process.env.WEATHER_API_KEY}`;
         // create array to push forcast objects in to
         let dayArray = [];
         // loop through the array in weather.json to grab individual forcasts
-        data.data.forEach(dayObj => {
+        data.data.map(dayObj => {
             // create instances of weather with the info front end needs
             let weather = new Weather(dayObj);
             // push created objects in to dayArray to prepare to pass to client
@@ -77,10 +89,10 @@ function weather(request, response) {
 // Constructors to tailor our incoming raw data
 
 function Location(obj, query) {
-    this.latitude = obj[0].lat,
-        this.longitude = obj[0].lon,
-        this.search_query = query,
-        this.formatted_query = obj[0].display_name
+    this.latitude = obj.lat,
+    this.longitude = obj.lon,
+    this.search_query = query,
+    this.formatted_query = obj.display_name
 }
 
 function Weather(obj) {

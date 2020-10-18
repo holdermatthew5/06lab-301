@@ -25,6 +25,12 @@ Start time: 10:31pm
 Finish time: 2:57pm
 Actual time needed to complete: 2hr 15min
 
+Number and name of feature: Feature #4 - Data formatting
+Estimate time needed to complete: 1hr
+Start time: 4:15pm
+Finish time:
+Actual time needed to complete:
+
 ## Getting Started
 
 To bring this app to your own device, start by visiting https://github.com/holdermatthew5/06lab-301.git and forking the repository.

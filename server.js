@@ -33,7 +33,6 @@ function location(request, response) {
         // find city name recieved from search
         let city = request.query.city;
         let key = process.env.GEOCODE_API_KEY;
-        let locArr = [];
         // assign location api url
         let url = `https://us1.locationiq.com/v1/search.php?key=${key}&q=${city}&format=json`;
         // request data from provided url
@@ -41,58 +40,59 @@ function location(request, response) {
         superagent.get(url).then(data => {
             // create object instance to pass to frontend
             let location = new Location(data.body[0], city);
-            locArr.push(location);
+            // pass object to front end
+            response.send(location);
         });
-        weather(request, response, lat, lon)
-        // pass object to front end
-        response.send(locArr);
     }
     // log error
     catch (error) {
         console.log(error);
-        response.status(500).send('Oops... Something\'s wrong here.');
+        response.status(500).send('Opps... Something\'s wrong with our location services.');
     }
 }
 
 // listen for request
 
-// app.get('/weather', weather);
+app.get('/weather', weather);
 
 // handle request
 
 function weather(request, response) {
     try {
         // define city
-        let city = request.query.city;
-        console.log(city)
+        let city = request.query.search_query;
         // define api url
-        let url = `https://api.weatherbit.io/v2.0/current?city=${city}&key=${process.env.WEATHER_API_KEY}`;
+        let url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${process.env.WEATHER_API_KEY}`;
         // create array to push forcast objects in to
         let dayArray = [];
-        // loop through the array in weather.json to grab individual forcasts
-        data.data.map(dayObj => {
-            // create instances of weather with the info front end needs
-            let weather = new Weather(dayObj);
-            // push created objects in to dayArray to prepare to pass to client
-            dayArray.push(weather);
-        });
-        // send forcast objects to client
-        response.send(dayArray);
+        superagent.get(url).then(data => {
+            // navigate to array of daily forecast objects
+            let forecastArr = JSON.parse(data.req.res.text).data;
+            // loop through the forecast array to grab individual forcasts
+            forecastArr.map(dayObj => {
+                // create instances of weather with info tailored to front end needs
+                let weather = new Weather(dayObj);
+                // push created objects in to dayArray to prepare to pass to client
+                dayArray.push(weather);
+            });
+            // send forcast objects to client
+            response.send(dayArray);
+        })
     }
-    // log error
+    // log error to terminal and to site
     catch (error) {
         console.log(error);
-        response.status(500).send('Oops... Something\'s wrong Headers.');
+        response.status(500).send('Oops... Something\'s wrong with our forecast.');
     }
 }
 
 // Constructors to tailor our incoming raw data
 
 function Location(obj, query) {
-    this.latitude = obj.lat,
-    this.longitude = obj.lon,
     this.search_query = query,
-    this.formatted_query = obj.display_name
+        this.formatted_query = obj.display_name,
+        this.latitude = obj.lat,
+        this.longitude = obj.lon
 }
 
 function Weather(obj) {

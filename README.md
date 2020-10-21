@@ -1,7 +1,7 @@
 # City Explorer
 
 **Author**: Matthew Holder
-**Version**: 1.0.3
+**Version**: 1.0.5
 
 # Overview
 
@@ -28,8 +28,20 @@ Actual time needed to complete: 2hr 15min
 Number and name of feature: Feature #4 - Data formatting
 Estimate time needed to complete: 1hr
 Start time: 4:15pm
-Finish time:
+Finish time: 4:45pm
 Actual time needed to complete:
+
+Number and name of feature: Feature #5 - Locations
+Estimate time needed to complete: 30min
+Start time: 4:46pm
+Finish time: 9:30pm
+Actual time needed to complete: ~7hr
+
+Number and name of feature: Feature #6 - Weather
+Estimate time needed: 30min
+Start time: 6:30pm
+Finish time: 10:30pm
+Actual time needed to complete: ~6hr
 
 ## Getting Started
 

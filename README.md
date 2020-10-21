@@ -1,4 +1,4 @@
-# City Explorer?
+# City Explorer
 
 **Author**: Matthew Holder
 **Version**: 1.0.5

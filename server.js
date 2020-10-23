@@ -5,6 +5,7 @@
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
+const pg = require('pg');
 
 require('dotenv').config();
 
@@ -14,12 +15,15 @@ const PORT = process.env.PORT || 3000;
 // start/instanciate Express
 const app = express();
 
+//
+const client = new pg.Client(progress.name.DATABASE_URL);
+
 // Use CORS (cross origin resource sharing)
 app.use(cors());
 
 // Routes
 app.get('/', (request, response) => {
-    response.send('Hello World');
+    response.send('It\'s working!');
 });
 
 // listen for request
@@ -36,10 +40,13 @@ function location(request, response) {
         // assign location api url
         let url = `https://us1.locationiq.com/v1/search.php?key=${key}&q=${city}&format=json`;
         // request data from provided url
-        // console.log('');
         superagent.get(url).then(data => {
+            // 1. check that tailored data is not already present in database.
+            // 2. if it is send that object with response.send().
+            // 3. if it is not run the following code.
             // create object instance to pass to frontend
             let location = new Location(data.body[0], city);
+            // 4. if this code is run send the tailored data into the table with const sql = `INSERT INTO loc (search_query, formatted_search, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *`; and const saveValues = [data.body[0].search_query, data.body[0].formatted_search, data.body[0].latitude, data.body[0].longitude]; but like how?
             // pass object to front end
             response.send(location);
         });
@@ -151,6 +158,9 @@ function Hiking(obj) {
 }
 
 // Start our server!
-app.listen(PORT, () => {
-    console.log(`Server is now listening on port ${PORT}`);
+client.connect().then( () => {
+    app.listem(PORT, () => {
+        console.log(`Server is now listening on port ${PORT}.`);
+    })
+    .catch(error => console.log(error));
 });

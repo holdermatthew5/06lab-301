@@ -1,7 +1,7 @@
 # City Explorer
 
 **Author**: Matthew Holder
-**Version**: 1.0.7
+**Version**: 1.0.9
 
 # Overview
 
@@ -49,6 +49,18 @@ Start time: 8:46pm
 Finish time: 10:55pm
 Actual time needed to complete: 2hr 15min
 
+Number and name of feature: Feature #8 - Database
+Estimate time needed to complete: 2hr
+Start time: 8:30pm
+Finish time: 10:00pm
+Actual time needed to complete: 1hr 30min
+
+Number and name of feature: Feature #9 - Server
+Estimate time needed to complete: 4hr
+Start time: 4:30pm
+Finish time: 6:30pm
+Actual time needed to complete: 2hr
+
 ## Getting Started
 
 To bring this app to your own device, start by visiting https://github.com/holdermatthew5/06lab-301.git and forking the repository.
@@ -61,10 +73,16 @@ You'll then need to create an account with Location, Weather and Hiking APIs. Wh
 Each API will also have a link. This link is needed to access the API and should replace the string parts of the respective url variables (do not replace urls in constructors).
 
 Once you've collected your APIs you'll need to create the .env file mentioned above in the same level as your server.js file and type the following code with no spaces or punctuation into the file (this is case sensitive, make sure to account for the example keys and search queries in the link):
-  - PORT=3000
-  - GEOCODE_API_KEY=your-key
-  - WEATHER_API_KEY=your-key
-  - HIKING_API_KEY=your-key
+  - `PORT=3000`.
+  - `GEOCODE_API_KEY=your-key`.
+  - `WEATHER_API_KEY=your-key`.
+  - `HIKING_API_KEY=your-key`.
+  - `DATABASE_URL=postgres://your-user-name:your-pass-word@localhost:5432/your-database-name`.
+
+To create your database run the following command in your sql command line:
+  - `CREATE DATABASE name-of-database`.
+
+Then, if you created a database with a name other than 'cityexplorer' look for every instance of the string cityexplorer in your schema.sql file and server.js file.
 
 To deploy:
 - To deploy to github:
@@ -75,16 +93,21 @@ To deploy:
   - Finally click save and scroll back down to find the link to your app in the same place.
 
 - To deploy with heroku:
-  - from your command line, run `heroku create` then `git push heroku master`.
+  - From your command line, run `heroku create` then `git push heroku master`.
   - Then to find the link to your deployed app run `git remote -v` in the command line while in the root level of the repository.
+  - Once done you can copy your database to your heroku version with the following command:
+    - `heroku pg:psql -f path/to/schema.sql --app your-app-name`.
 
 ## Architecture
 
 This app uses:
   - Javascript
+  - JQuery
   - Node.js
   - cors
   - express
+  - superagent
+  - postgresql
 
 ## Change Log
 
@@ -96,6 +119,8 @@ This app uses:
 10-20-2020 9:30pm - Feature #5 replaces a location.json file with a legitimate API request.
 10-20-2020 10:30pm - Feature #6 replaces a weather.json file with a legitimate API request.
 10-21-2020 10:55pm - Feature #7 allows a user to view local hiking spots and their ratings based on their searched location.
+10-22-2020 10:00pm - Feature #8 uses a database to store data from the previous call and overwrites old data after each query.
+10-23-2020 6:20pm - Feature #9 sends data from the previous query if it exists in the database. If the necessary data does not exist in the database the server will make a new API call to collect data to send to front-end and save to database.
 
 ## Credits and Collaborations
 

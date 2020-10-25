@@ -1,7 +1,7 @@
 # City Explorer
 
 **Author**: Matthew Holder
-**Version**: 1.0.9
+**Version**: 1.1.0
 
 # Overview
 

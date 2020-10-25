@@ -26,19 +26,20 @@ app.use(cors());
 app.get('/', (request, response) => {
     response.send('It\'s working!');
 });
-
-// listen for request
-
 app.get('/location', location);
+app.get('/weather', weather);
+app.get('/trails', trails);
+app.get('/movies', movies);
+app.get('/yelp', yelp);
 
 // handle request
 
 function location(request, response) {
     // find city name recieved from search
     let city = request.query.city;
+    // bring in key from .env
     let key = process.env.GEOCODE_API_KEY;
     // check db here if it's empty move to the next if not send that and next function
-    console.log(request.query);
     let SQL = 'SELECT * FROM loc WHERE search_query = $1;';
     let safeValues = [city];
     client.query(SQL, safeValues)
@@ -49,26 +50,22 @@ function location(request, response) {
                 let url = `https://us1.locationiq.com/v1/search.php?key=${key}&q=${city}&format=json`;
                 // request data from provided url
                 superagent.get(url).then(data => {
+                    // tailor data to front-end needs
                     let location = new Location(data.body[0], city);
+                    // insert new data into databbase
                     let SQL2 = 'INSERT INTO loc (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4);';
                     let safeValues2 = [location.search_query, location.formatted_query, location.latitude, location.longitude];
                     client.query(SQL2, safeValues2)
+                    // send tailored data to front-end
                     response.send(location);
                 })
             }
         })
-        // log error
         .catch((error) => {
             console.log(error);
             response.status(500).send('Opps... Something\'s wrong with our location services.');
         })
 }
-
-// listen for request
-
-app.get('/weather', weather);
-
-// handle request
 
 function weather(request, response) {
     try {
@@ -92,18 +89,11 @@ function weather(request, response) {
             response.send(dayArray);
         })
     }
-    // log error to terminal and to site
     catch (error) {
         console.log(error);
         response.status(500).send('Oops... Something\'s wrong with our forecast.');
     }
 }
-
-// listen for request
-
-app.get('/trails', trails);
-
-// handle trail request
 
 function trails(request, response) {
     try {
@@ -126,22 +116,15 @@ function trails(request, response) {
             response.send(newArr);
         });
     }
-    // log error if try fails
     catch {
-        // log error to terminal for back end team
         console.log(error);
-        // log error to front-end for front-end team
         response.status(500).send(`Oops... Something\'s wrong with our trail services.`)
     }
 }
 
-// 
-app.get('/movies', movies);
-
-// 
-
 function movies(request, response) {
     try {
+        // Define the search
         let city = request.query.search_query;
         // Define the API url
         let url = `https://api.themoviedb.org/3/search/movie/?api_key=${process.env.MOVIE_API_KEY}&query=${city}`;
@@ -164,25 +147,23 @@ function movies(request, response) {
     }
 }
 
-// 
-
-app.get('/yelp', yelp);
-
-// 
-
 function yelp(request, response) {
     try {
+        // Define the search
         let lat = request.query.latitude;
         let lon = request.query.longitude;
+        // Define the API url
         let url = `https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${lon}&term=restaurant`;
+        // Use API key
         const auth = 'Bearer ' + process.env.YELP_API_KEY;
         superagent.get(url).set('Authorization', auth)
         .then(data => {
-            console.log(data.body);
+            // Tailor data to front-end needs
             let yelpArr = data.body.businesses.map(obj => {
                 let yelp = new Yelp(obj);
                 return yelp;
             })
+            // Send tailored data to front=end
             response.send(yelpArr);
         })
     }

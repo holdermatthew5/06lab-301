@@ -164,6 +164,34 @@ function movies(request, response) {
     }
 }
 
+// 
+
+app.get('/yelp', yelp);
+
+// 
+
+function yelp(request, response) {
+    try {
+        let lat = request.query.latitude;
+        let lon = request.query.longitude;
+        let url = `https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${lon}&term=restaurant`;
+        const auth = 'Bearer ' + process.env.YELP_API_KEY;
+        superagent.get(url).set('Authorization', auth)
+        .then(data => {
+            console.log(data.body);
+            let yelpArr = data.body.businesses.map(obj => {
+                let yelp = new Yelp(obj);
+                return yelp;
+            })
+            response.send(yelpArr);
+        })
+    }
+    catch {
+        console.log(error);
+        response.status(500).send('Oops... Something\'s wrong with our business listings.');
+    }
+}
+
 // Constructors to tailor our incoming raw data
 
 function Location(obj, query) {
@@ -201,6 +229,13 @@ function Movies(obj) {
     this.released_on = obj.release_date
 }
 
+function Yelp(obj) {
+    this.name = obj.name,
+    this.image_url = obj.image_url,
+    this.price = obj.price,
+    this.rating = obj.rating,
+    this.url = obj.url
+}
 
 // Start our server!
 client.connect()

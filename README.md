@@ -73,6 +73,12 @@ Start time: 2:16pm
 Finish time: 5:30pm
 Actual time needed to complete: 2hr 15min
 
+Name and number of feature: Feature #12 - Pagination
+Estimated time to complete: 45min
+Start time: 9:00pm
+Finish time: 9:20pm
+Actual time needed to complete: 20min
+
 ## Getting Started
 
 To bring this app to your own device, start by visiting https://github.com/holdermatthew5/06lab-301.git and forking the repository.
@@ -82,7 +88,7 @@ From there you can copy the link from the browsers search bar and run the follow
 
 You'll then need to create an account with all the necessary APIs. When you do you'll be assigned an API key for each API. This key is individual to you and can result in a charge if overused, so be sure to add it to your .env file and add your .env file to your .gitignore file. This will ensure your keys are not sent to heroku or github so they're not used by unauthorized users.
 
-Each API will also have a link. This link is needed to access the API and should replace the string parts of the respective url variables (do not replace urls in constructors).
+Each API will also have a link. This link is needed to access the API and should replace the string parts of the respective url variables (do not replace urls in constructors). You will also need to change the keys in the queryParams (server.js:161) object to match the terms that would be used in the APIs documentation.
 
 Once you've collected your APIs you'll need to create the .env file mentioned above in the same level as your server.js file and type the following code with no spaces or punctuation into the file (this is case sensitive, make sure to account for the example keys and search queries in the link):
   - `PORT=3000`.
@@ -136,6 +142,7 @@ This app uses:
 10-23-2020 6:20pm - Feature #9 sends data from the previous query if it exists in the database. If the necessary data does not exist in the database the server will make a new API call to collect data to send to front-end and save to database.
 10-24-2020 3:15pm - Feature #10 gives the user a list of movies related to their search.
 10-23-2020 5:30pm - Feature #11 gives the user a list of restaurants in the general area of their search.
+10-27-2020 9:20pm - Feature #12 reduces the number of results displayed by the Yelp API from 20 results per page to 5 results per page.
 
 ## Credits and Collaborations
 

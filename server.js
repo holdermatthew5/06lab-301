@@ -150,14 +150,23 @@ function movies(request, response) {
 function yelp(request, response) {
     try {
         // Define the search
-        let lat = request.query.latitude;
-        let lon = request.query.longitude;
+        let location = request.query.search_query;
         // Define the API url
-        let url = `https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${lon}&term=restaurant`;
+        let url = `https://api.yelp.com/v3/businesses/search`;
+        // Limit search to 5 results at a time
+        const numPerPage = 5;
+        const page = request.query.page || 1;
+        const start = ((page - 1) * numPerPage + 1);
+        // Remember to change keys in queryParams to match the terms used in the APIs documentation
+        const queryParams = {
+            offset: start,
+            limit: numPerPage,
+            location: location
+        }
         // Use API key
         const auth = 'Bearer ' + process.env.YELP_API_KEY;
         superagent.get(url).set('Authorization', auth)
-        .then(data => {
+        .query(queryParams).then(data => {
             // Tailor data to front-end needs
             let yelpArr = data.body.businesses.map(obj => {
                 let yelp = new Yelp(obj);
@@ -167,7 +176,7 @@ function yelp(request, response) {
             response.send(yelpArr);
         })
     }
-    catch {
+    catch(error) {
         console.log(error);
         response.status(500).send('Oops... Something\'s wrong with our business listings.');
     }

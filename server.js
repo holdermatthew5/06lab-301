@@ -68,10 +68,11 @@ function location(request, response) {
 }
 
 function weather(request, response) {
-    // Define city
-    let city = request.query.search_query;
+    // Define search query
+    let lat = request.query.latitude;
+    let lon = request.query.longitude;
     // Define api url
-    let url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${process.env.WEATHER_API_KEY}`;
+    let url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
     // Create array to push forcast objects in to
     let dayArray = [];
     superagent.get(url).then(data => {
